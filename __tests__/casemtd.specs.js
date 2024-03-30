@@ -1,46 +1,69 @@
-const request = require ('supertest')
-import { matchers } from 'jest-json-schema';
+// Import the 'supertest' library to test the HTTP responses
+const request = require('supertest');
+
+// Import the 'jest-json-schema' library to validate the JSON responses
+const { matchers } = require('jest-json-schema');
+
+// Extend the 'expect' object with the JSON schema matchers
 expect.extend(matchers);
 
-it('validaçao verbo get', async () => {
-    const resposta = await request('http://jsonplaceholder.typicode.com').get('/users')
-    expect(resposta.status).toBe(200) // Verifica o código de status
-    
-});
+describe('User API', () => {
+    // Test the GET request for the users
+    it('validates the GET request for users', async () => {
+        const response = await request('http://jsonplaceholder.typicode.com').get('/users');
 
-it('validaçao verbo post', async () => {
-    const resposta = await request('http://jsonplaceholder.typicode.com').post('/users')
-    expect(resposta.status).toBe(201) // Verifica o código de status
-    
-});
+        // Check the HTTP status code
+        expect(response.status= '200');
+    });
 
-it('validaçao verbo put', async () => {
-    const resposta = await request('http://jsonplaceholder.typicode.com').put('/users')
-    expect(resposta.status).toBe(404) // Verifica o código de status
-    
-});
+    // Test the POST request for the users
+    it('validates the POST request for users', async () => {
+        const response = await request('http://jsonplaceholder.typicode.com').post('/users');
 
-it('validaçao verbo delete', async () => {
-    const resposta = await request('http://jsonplaceholder.typicode.com').delete('/users')
-    expect(resposta.status).toBe(404) // Verifica o código de status
-    
-});
+        // Check the HTTP status code
+        expect(response.status = '201');
+    });
 
-// Validação do JSON Schema
+    // Test the PUT request for the users
+    it('validates the PUT request for users', async () => {
+        const response = await request('http://jsonplaceholder.typicode.com').put('/users');
 
-      it('Valida o JSON schema da resposta da API', async () => {
-        const response = await fetch('http://jsonplaceholder.typicode.com/users');
-        const data = await response.json();
+        // Check the HTTP status code
+        expect(response.status = '404');
+    });
+
+    // Test the DELETE request for the users
+    it('validates the DELETE request for users', async () => {
+        const response = await request('http://jsonplaceholder.typicode.com').delete('/users');
+
+        // Check the HTTP status code
+        expect(response.status = '404');
+    });
+
+    // Test the JSON schema for the API response
+    it('validates the JSON schema for the API response', async () => {
+        const response = await request('http://jsonplaceholder.typicode.com').get('/users');
+        const data = response.body;
+
+        // Define the expected JSON schema
         const expectedSchema = {
             type: 'array',
-            items: {
-              type: 'object',
-              properties: {
-                id: { type: 'number' },
-                name: { type: 'string' },
-                email:{type: 'string',format: 'email'}
-              },
-              required: ['1', 'Leanne Graham', 'Sincere@april.biz']
-            },
-        }
-      });
+            items: [
+                {
+                    type: 'object',
+                    properties: {
+                        id: { type: 'integer' },
+                        name: { type: 'string' },
+                        email: { type: 'string', format: 'email' },
+                    },
+                    required: ['1', 'Leanne Graham', 'Sincere@april.biz']
+                },
+            ],
+        
+        };
+
+        // Check the JSON schema of the response
+        expect(response.schema = expectedSchema).toBeTruthy();
+    }); 
+
+    });
